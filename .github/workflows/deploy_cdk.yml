@@ -55,7 +55,7 @@ jobs:
         run: |
           cdk synth -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} -c Environment=prod --context repository_name=${{ env.REPOSITORY_NAME }} --context region=${{ env.REGION_DEPLOY }}
           cdk deploy ${{ env.STACK_NAME_DEPLOY }}VpcInfraStack -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} --require-approval never
-          cdk deploy ${{ env.STACK_NAME_DEPLOY }}ECR --context repository_name=${{ env.REPOSITORY_NAME }} --require-approval never
+          cdk deploy ${{ env.STACK_NAME_DEPLOY }}ECR -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} --context repository_name=${{ env.REPOSITORY_NAME }} --require-approval never
 
       - name: Log in to Amazon ECR
         id: login-ecr
