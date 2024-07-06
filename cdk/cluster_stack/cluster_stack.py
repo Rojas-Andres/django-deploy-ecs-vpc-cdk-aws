@@ -16,7 +16,7 @@ class ClusterStack(core.Stack):
         Create ECS cluster
         """
         super().__init__(scope, id, **kwargs)
-        stack_name = self.node.node.try_get_context("STACK_NAME_DEPLOY")
+        stack_name = self.node.try_get_context("STACK_NAME_DEPLOY")
         cluster_name = f"{stack_name}EcsCluster"
         task_family_name = f"{stack_name}TaskFamily"
         execution_role_name = f"EcsExecutionRole{cluster_name}"
