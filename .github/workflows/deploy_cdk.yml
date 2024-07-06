@@ -48,6 +48,9 @@ jobs:
       - name: Install libraries
         run: |
           pip install -r cdk/cdk_requirements.txt
+      - name: Init CDK BOOTSTRAP
+        run: |
+          cdk bootstrap aws://${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }}/${{ env.REGION_DEPLOY }}
       - name: Deploy to AWS VPC AND ECR
         run: |
           cdk synth -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} -c Environment=prod --context repository_name=${{ env.REPOSITORY_NAME }} --context region=${{ env.REGION_DEPLOY }}
