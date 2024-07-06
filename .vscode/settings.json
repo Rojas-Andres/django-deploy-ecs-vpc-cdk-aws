@@ -1,0 +1,47 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#22503a",
+    "activityBar.background": "#22503a",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#9162bc",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#22503a",
+    "statusBar.background": "#132c20",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#22503a",
+    "statusBarItem.remoteBackground": "#132c20",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#132c20",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#132c2099",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#132c20",
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.formatOnSave": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.formatting.provider": "none",
+  "python.formatting.blackArgs": [
+    "--line-length=120",
+    "--skip-string-normalization"
+  ],
+  "python.linting.flake8Args": [
+    "--line-length=120",
+    "--skip-string-normalization"
+  ],
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+    "editor.rulers": [120],
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.linting.pylamaArgs": ["--ignore=E501"]
+}

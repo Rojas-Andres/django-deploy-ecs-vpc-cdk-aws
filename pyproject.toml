@@ -1,0 +1,38 @@
+[tool.isort]
+profile = "django"
+combine_as_imports = true
+include_trailing_comma = true
+line_length = 120
+multi_line_output = 3
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+include = '\.pyi?$'
+exclude = '''
+^/(
+  (
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | venv
+    | .venv
+    | env
+    | .env
+    | _build
+    | buck-out
+    | build
+    | dist
+    | migrations
+  )/
+)
+'''
+
+[tool.djlint]
+profile="django"
+ignore = "H031"
+
+[tool.ruff]
+line-length = 120

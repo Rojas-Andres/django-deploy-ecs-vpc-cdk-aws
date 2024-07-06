@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Código OTP de ingreso" />
+    <title>Código OTP</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        .otp {
+            display: flex;
+            justify-content: center;
+        }
+
+        .digit {
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #007BFF;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .validity {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hola {{ first_name }},</h1>
+        <p>Gracias por ingresar a nuestro sitio web. A continuación, te proporcionamos tu código OTP de 6 dígitos
+            para iniciar sesión:</p>
+        <div class="otp">
+            <div class="digit">{{ otp_code_1 }}</div>
+            <div class="digit">{{ otp_code_2 }}</div>
+            <div class="digit">{{ otp_code_3 }}</div>
+            <div class="digit">{{ otp_code_4 }}</div>
+            <div class="digit">{{ otp_code_5 }}</div>
+            <div class="digit">{{ otp_code_6 }}</div>
+        </div>
+        <p class="validity">Este código expirará en {{ otp_validity_duration }} minutos.</p>
+        <p>Si no has solicitado este código o tienes algún problema con tu cuenta, por favor contáctanos de inmediato.
+        </p>
+        <p>¡Gracias y bienvenido/a!</p>
+    </div>
+</body>
+
+</html>

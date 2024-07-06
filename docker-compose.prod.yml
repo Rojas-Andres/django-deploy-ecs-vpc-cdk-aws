@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: docker/prod.Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/src
+    command: >
+      sh -c "python manage.py wait_for_db && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+    restart: on-failure
+
+  db:
+    image: postgres:13.3
+    env_file:
+      - .env
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  dev-db-data:
+  dev-static-data:
