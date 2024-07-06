@@ -1,0 +1,73 @@
+name: Pipeline STACK_DJANGO
+
+on:
+  push:
+    branches:
+      - "main"
+env:
+
+  ENVIRONMENT_PROD: production
+  REGION_DEPLOY: us-west-2
+  REPOSITORY_NAME: django-ecr
+  AWS_ACCOUNT_ID_STACK_DJANGO: ${{ secrets.AWS_ACCOUNT_ID_STACK_DJANGO }}
+  AWS_ACCESS_KEY_ID_STACK_DJANGO: ${{ secrets.AWS_ACCESS_KEY_ID_STACK_DJANGO }}
+  AWS_SECRET_ACCESS_KEY_STACK_DJANGO: ${{ secrets.AWS_SECRET_ACCESS_KEY_STACK_DJANGO }}
+  STACK_NAME_DEPLOY: StackDjango
+
+
+jobs:
+  deploy-cdk-infra-STACK_DJANGO:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    strategy:
+      max-parallel: 8
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install dependencies  CDK
+        run: |
+          npm install -g aws-cdk@2.135.0
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID_STACK_DJANGO }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY_STACK_DJANGO }}
+          aws-region:  ${{ env.REGION_DEPLOY }}
+      - name: generate unique tag unique variable based on timestamp
+        run: echo IMAGE_TAG=streamelint-$(date +%s) >> $GITHUB_ENV
+
+      - name: Install libraries
+        run: |
+          pip install -r cdk/cdk_requirements.txt
+      - name: Deploy to AWS VPC AND ECR
+        run: |
+          cdk synth -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} -c Environment=prod --context repository_name=${{ env.REPOSITORY_NAME }} --context region=${{ env.REGION_DEPLOY }}
+          cdk deploy ${{ env.STACK_NAME_DEPLOY }}VpcInfraStack -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} --require-approval never
+          cdk deploy ${{ env.STACK_NAME_DEPLOY }}ECR --context repository_name=${{ env.REPOSITORY_NAME }} --require-approval never
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.REPOSITORY_NAME }}
+          IMAGE_URL: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        run: |
+          cd dashboard
+          docker build -t $ECR_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo IMAGE_URL=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG >> $GITHUB_ENV
+      - name: Deploy to AWS ECS
+        run: |
+          echo $IMAGE_URL
+          cdk deploy ClusterStreamelintECS -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} --context cluster_name=ClusterStreamelint --context cluster_stack_name=ClusterStreamelintECS --context task_family_name=StreamelintTask --context repository_name=${{ env.REPOSITORY_NAME }} --context REPOSITORY_ECR=$IMAGE_URL --require-approval never
