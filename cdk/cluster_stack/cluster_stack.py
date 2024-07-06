@@ -73,7 +73,7 @@ class ClusterStack(core.Stack):
         )
 
         container = task_definition.add_container(
-            "api_sandbox",
+            "api_django",
             image=ecs.ContainerImage.from_registry(ecr_repository),
             cpu=0,
             logging=ecs.LogDrivers.aws_logs(stream_prefix="ecs", log_group=log_group),

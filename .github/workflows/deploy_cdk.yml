@@ -43,7 +43,7 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY_STACK_DJANGO }}
           aws-region:  ${{ env.REGION_DEPLOY }}
       - name: generate unique tag unique variable based on timestamp
-        run: echo IMAGE_TAG=streamelint-$(date +%s) >> $GITHUB_ENV
+        run: echo IMAGE_TAG=django-stack-$(date +%s) >> $GITHUB_ENV
 
       - name: Install libraries
         run: |
@@ -72,4 +72,4 @@ jobs:
       - name: Deploy to AWS ECS
         run: |
           echo $IMAGE_URL
-          cdk deploy ClusterStreamelintECS -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} --context cluster_name=ClusterStreamelint --context cluster_stack_name=ClusterStreamelintECS --context task_family_name=StreamelintTask --context repository_name=${{ env.REPOSITORY_NAME }} --context REPOSITORY_ECR=$IMAGE_URL --require-approval never
+          cdk deploy ${{ env.STACK_NAME_DEPLOY }}ECS -c account_id_deploy=${{ env.AWS_ACCOUNT_ID_STACK_DJANGO }} -c STACK_NAME_DEPLOY=${{ env.STACK_NAME_DEPLOY }} --context repository_name=${{ env.REPOSITORY_NAME }} --context REPOSITORY_ECR=$IMAGE_URL --require-approval never

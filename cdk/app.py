@@ -16,6 +16,6 @@ cluster_stack_name = app.node.try_get_context("cluster_stack_name") or "ClusterS
 vpc_stack = VpcInfraStack(app, f"{stack_name}VpcInfraStack", name=stack_name, env=env_us_west_2)
 
 ecr_repository = EcrStack(app, f"{stack_name}ECR", env=env_us_west_2)
-cluster_stack = ClusterStack(app, cluster_stack_name, vpc=vpc_stack.vpc, env=env_us_west_2)
+cluster_stack = ClusterStack(app, f"{stack_name}ECS", vpc=vpc_stack.vpc, env=env_us_west_2)
 
 app.synth()
